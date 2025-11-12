@@ -21,7 +21,7 @@ dependencies {
     modApi("me.shedaniel.cloth:cloth-config-fabric:${property("cloth_version")}") {
         exclude("net.fabricmc.fabric-api")
     }
-    modApi("com.terraformersmc:modmenu:${property("modmenu_version")}")
+    modCompileOnly("com.terraformersmc:modmenu:${property("modmenu_version")}")
     modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:${property("fabric_version")}")
 }
 
