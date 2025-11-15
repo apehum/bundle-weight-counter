@@ -1,3 +1,4 @@
+//? if fabric {
 package com.github.apehum.bundlecounter.config;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
@@ -11,3 +12,4 @@ public class BundleCounterModMenuIntegration implements ModMenuApi {
 		return ConfigScreen::createConfigScreen;
 	}
 }
+//?}
