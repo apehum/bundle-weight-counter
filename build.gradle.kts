@@ -1,5 +1,8 @@
+import com.github.apehum.bundlecounter.VersionResolver
+
 plugins {
     id("dev.isxander.modstitch.base") version "0.7.0-unstable"
+    id("me.modmuss50.mod-publish-plugin") version "1.1.0"
 }
 
 val platform = stonecutter.current.project.substringAfter('-')
@@ -71,6 +74,8 @@ dependencies {
     }
 }
 
+val outputJarTask = modstitch.finalJarTask
+
 tasks {
     jar {
         from("LICENSE") {
@@ -78,20 +83,54 @@ tasks {
         }
     }
 
-    val outputJarTask =
-        if (modstitch.isLoom) {
-            named("remapJar", org.gradle.jvm.tasks.Jar::class.java)
-        } else {
-            jar
+    val copyToRoot =
+        register<Copy>("copyToRoot") {
+            dependsOn(outputJarTask)
+            from(outputJarTask.map { it.archiveFile.get() })
+            into(rootProject.layout.buildDirectory.dir("libs"))
         }
-
-    val copyToRoot = register<Copy>("copyToRoot") {
-        dependsOn(outputJarTask)
-        from(outputJarTask.map { it.archiveFile.get() })
-        into(rootProject.layout.buildDirectory.dir("libs"))
-    }
 
     build {
         dependsOn(copyToRoot)
+    }
+}
+
+publishMods {
+    changelog =
+        rootProject.layout.projectDirectory
+            .file("changelog.md")
+            .asFile
+            .readText()
+    type = STABLE
+
+    val loaderDisplayName =
+        when (platform) {
+            "fabric" -> "Fabric"
+            "neoforge" -> "NeoForge"
+            else -> throw IllegalStateException("Unsupported platform $platform")
+        }
+
+    displayName = "[$loaderDisplayName ${property("minecraft_version")}] Bundle Weight Counter ${property("mod_version")}"
+    file = outputJarTask.get().archiveFile
+    dryRun =
+        providers.environmentVariable("MODRINTH_TOKEN").getOrNull() == null ||
+        providers.environmentVariable("CURSEFORGE_TOKEN").getOrNull() == null
+
+    val versions =
+        VersionResolver
+            .getMinecraftVersionsInRange("release", property("minecraft_version_dependency") as String)
+            .get()
+            .map { it.id }
+
+    modrinth {
+        projectId = "ExWOxDxj"
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        minecraftVersions.addAll(versions)
+    }
+
+    curseforge {
+        projectId = "1132365"
+        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+        minecraftVersions.addAll(versions)
     }
 }
