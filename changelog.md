@@ -1,1 +1,2 @@
-- NeoForge port
+- Fixed incompatibility with other mods caused by mixin Redirect usage ([#5](https://github.com/apehum/bundle-weight-counter/issues/5)).
+- NeoForge port.
