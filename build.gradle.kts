@@ -113,8 +113,8 @@ publishMods {
     displayName = "[$loaderDisplayName ${property("minecraft_version")}] Bundle Weight Counter ${property("mod_version")}"
     file = outputJarTask.get().archiveFile
     dryRun =
-        providers.environmentVariable("MODRINTH_TOKEN").getOrNull() == null ||
-        providers.environmentVariable("CURSEFORGE_TOKEN").getOrNull() == null
+        providers.environmentVariable("MODRINTH_TOKEN").getOrNull()?.takeIf { it.isNotBlank() } == null ||
+        providers.environmentVariable("CURSEFORGE_TOKEN").getOrNull()?.takeIf { it.isNotBlank() } == null
 
     val versions =
         VersionResolver
