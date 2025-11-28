@@ -102,6 +102,7 @@ publishMods {
             .asFile
             .readText()
     type = STABLE
+    modLoaders.add(platform)
 
     val loaderDisplayName =
         when (platform) {
