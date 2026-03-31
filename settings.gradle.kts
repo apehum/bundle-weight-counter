@@ -6,16 +6,19 @@ pluginManagement {
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.7.10"
+    id("dev.kikugie.stonecutter") version "0.9"
 }
 
 stonecutter {
     create(rootProject) {
-        fun mc(mcVersion: String, vararg loaders: String) =
-            loaders.forEach { version("$mcVersion-$it", mcVersion) }
+        fun mc(
+            mcVersion: String,
+            vararg loaders: String,
+        ) = loaders.forEach { version("$mcVersion-$it", mcVersion) }
 
         mc("1.21.2", "fabric", "neoforge")
         mc("1.21.5", "fabric", "neoforge")
+        mc("26.1", "fabric", "neoforge")
     }
 }
 

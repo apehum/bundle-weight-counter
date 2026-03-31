@@ -30,8 +30,13 @@ public abstract class GuiGraphicsMixin {
             return original.call(instance);
         }
 
-        var weight = contents.weight();
-        var stackValue = (int) (weight.floatValue() * 64);
+        //? if >=26.1 {
+        /*var weightResult = contents.weight();
+        float weight = weightResult.isError() ? 1 : weightResult.getOrThrow().floatValue();
+        *///?} else {
+        float weight = contents.weight().floatValue();
+        //?}
+        var stackValue = (int) (weight * 64);
 
         return Math.max(1, stackValue);
     }

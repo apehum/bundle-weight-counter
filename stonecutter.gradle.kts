@@ -1,5 +1,6 @@
 plugins {
     id("dev.kikugie.stonecutter")
+    id("fabric-loom") version "1.15.5" apply false
 }
 stonecutter active "1.21.2-fabric"
 
@@ -8,19 +9,20 @@ stonecutter parameters {
 }
 
 gradle.projectsEvaluated {
-    var previousProject: Project? = null
-
-    subprojects.sortedBy { it.name }.forEach { project ->
-        val publishTasks = project.tasks.named { it.startsWith("publish") }
-
-        previousProject?.let { previousProject ->
-            publishTasks.forEach {
-                it.mustRunAfter(previousProject.tasks.named(it.name))
-            }
-        }
-
-        previousProject = project
-    }
+    // todo: broken in gradle 9+
+//    var previousProject: Project? = null
+//
+//    subprojects.sortedBy { it.name }.forEach { project ->
+//        val publishTasks = project.tasks.named { it.startsWith("publish") }
+//
+//        previousProject?.let { previousProject ->
+//            publishTasks.forEach {
+//                it.mustRunAfter(previousProject.tasks.named(it.name))
+//            }
+//        }
+//
+//        previousProject = project
+//    }
 }
 
 allprojects {

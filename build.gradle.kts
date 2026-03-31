@@ -1,7 +1,7 @@
 import com.github.apehum.bundlecounter.VersionResolver
 
 plugins {
-    id("dev.isxander.modstitch.base") version "0.7.0-unstable"
+    id("dev.isxander.modstitch.base") version "0.8.4"
     id("me.modmuss50.mod-publish-plugin") version "1.1.0"
 }
 
@@ -56,6 +56,14 @@ modstitch {
         addMixinsToModManifest = true
 
         configs.register("bundlecounter")
+    }
+}
+
+stonecutter {
+    replacements.string(current.parsed >= "26.1") {
+        replace("net.minecraft.client.gui.GuiGraphics", "net.minecraft.client.gui.GuiGraphicsExtractor")
+        replace("GuiGraphics.class", "GuiGraphicsExtractor.class")
+        replace("renderItemCount", "itemCount")
     }
 }
 
