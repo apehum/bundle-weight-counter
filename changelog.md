@@ -1,1 +1,1 @@
-- Updated to `26.1`.
+- Added an option to show a `1` when one item is in the bundle. [#6](https://github.com/apehum/bundle-weight-counter/issues/6)
