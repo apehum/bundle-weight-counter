@@ -42,8 +42,18 @@ object VersionResolver {
                 val versionRange = RangeListFactory.create(versionRange)
                 versions
                     .filter { it.type == type }
-                    .mapNotNull { version -> Semver.parse(version.id)?.let { it to version } }
-                    .filter { versionRange.isSatisfiedBy(it.first) }
+                    .mapNotNull { version ->
+                        val versionId =
+                            if (version.id.split(".").size < 3) {
+                                version.id + ".0"
+                            } else {
+                                version.id
+                            }
+
+                        Semver
+                            .parse(versionId)
+                            ?.let { it to version }
+                    }.filter { versionRange.isSatisfiedBy(it.first) }
                     .map { it.second }
             }
 

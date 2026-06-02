@@ -121,25 +121,42 @@ publishMods {
 
     displayName = "[$loaderDisplayName ${property("minecraft_version")}] Bundle Weight Counter ${property("mod_version")}"
     file = outputJarTask.get().archiveFile
-    dryRun =
-        providers.environmentVariable("MODRINTH_TOKEN").getOrNull()?.takeIf { it.isNotBlank() } == null ||
-        providers.environmentVariable("CURSEFORGE_TOKEN").getOrNull()?.takeIf { it.isNotBlank() } == null
+
+    val modrinthToken =
+        providers
+            .gradleProperty("modrinth_token")
+            .orElse(
+                providers.environmentVariable("MODRINTH_TOKEN").orNull ?: "",
+            ).orNull
+            ?.takeIf { it.isNotBlank() }
+
+    val curseforgeToken =
+        providers
+            .gradleProperty("curseforge_token")
+            .orElse(
+                providers.environmentVariable("CURSEFORGE_TOKEN").orNull ?: "",
+            ).orNull
+            ?.takeIf { it.isNotBlank() }
+
+    dryRun = modrinthToken == null || curseforgeToken == null
 
     val versions =
         VersionResolver
             .getMinecraftVersionsInRange("release", property("minecraft_version_dependency") as String)
             .get()
             .map { it.id }
+            .also { println("Minecraft versions: $it") }
 
     modrinth {
         projectId = "ExWOxDxj"
-        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        accessToken = modrinthToken
         minecraftVersions.addAll(versions)
     }
 
     curseforge {
         projectId = "1132365"
-        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+        accessToken = curseforgeToken
         minecraftVersions.addAll(versions)
+        changelogType = "markdown"
     }
 }
