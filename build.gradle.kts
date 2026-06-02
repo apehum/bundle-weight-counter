@@ -138,7 +138,13 @@ publishMods {
             ).orNull
             ?.takeIf { it.isNotBlank() }
 
-    dryRun = modrinthToken == null || curseforgeToken == null
+    val dryRunProperty =
+        providers
+            .gradleProperty("dry_run")
+            .getOrElse("false")
+            .toBoolean()
+
+    dryRun = modrinthToken == null || curseforgeToken == null || dryRunProperty
 
     val versions =
         VersionResolver
