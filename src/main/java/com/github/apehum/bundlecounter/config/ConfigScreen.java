@@ -16,9 +16,8 @@ public class ConfigScreen {
 		builder.setSavingRunnable(BundleCounter.CONFIG::writeToFile);
 
 		ConfigCategory generalCategory = builder.getOrCreateCategory(Component.literal("General"));
-		ConfigEntryBuilder renderOnItemOption = builder.entryBuilder();
 
-		generalCategory.addEntry(renderOnItemOption
+		generalCategory.addEntry(builder.entryBuilder()
 				.startBooleanToggle(Component.literal("Render on item"), BundleCounter.CONFIG.shouldRenderOnItem)
 				.setDefaultValue(true)
 				.setTooltip(Component.literal("Whether or not the weight of the bundle should render directly on the item sprite"))
@@ -26,7 +25,7 @@ public class ConfigScreen {
 				.build()
 		);
 
-		generalCategory.addEntry(renderOnItemOption
+		generalCategory.addEntry(builder.entryBuilder()
 				.startBooleanToggle(Component.literal("Render count of 1"), BundleCounter.CONFIG.shouldRenderSingleCount)
 				.setDefaultValue(false)
 				.setTooltip(Component.literal("Whether the counter should render when the count is 1"))
