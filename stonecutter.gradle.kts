@@ -9,20 +9,12 @@ stonecutter parameters {
 }
 
 gradle.projectsEvaluated {
-    // todo: broken in gradle 9+
-//    var previousProject: Project? = null
-//
-//    subprojects.sortedBy { it.name }.forEach { project ->
-//        val publishTasks = project.tasks.named { it.startsWith("publish") }
-//
-//        previousProject?.let { previousProject ->
-//            publishTasks.forEach {
-//                it.mustRunAfter(previousProject.tasks.named(it.name))
-//            }
-//        }
-//
-//        previousProject = project
-//    }
+    subprojects.sortedBy { it.name }.zipWithNext { prev, curr ->
+        curr.tasks.matching { it.name.startsWith("publish") }.configureEach {
+            val taskName = name
+            mustRunAfter(prev.tasks.matching { it.name == taskName })
+        }
+    }
 }
 
 allprojects {
