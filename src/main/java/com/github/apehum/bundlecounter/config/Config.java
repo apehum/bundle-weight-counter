@@ -3,6 +3,7 @@ package com.github.apehum.bundlecounter.config;
 import com.github.apehum.bundlecounter.BundleCounter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 
 //? if fabric {
 import net.fabricmc.loader.api.FabricLoader;
@@ -33,9 +34,10 @@ public class Config {
 			config.writeToFile();
 		} else {
 			try {
-				config = GSON.fromJson(Files.readString(Config.FILE_PATH), Config.class);
-			} catch (IOException e) {
-				BundleCounter.LOGGER.error("Failed to read config file!", e);
+				Config loaded = GSON.fromJson(Files.readString(Config.FILE_PATH), Config.class);
+				if (loaded != null) config = loaded;
+			} catch (IOException | JsonParseException e) {
+				BundleCounter.LOGGER.error("Failed to read config file, falling back to defaults!", e);
 			}
 		}
 
